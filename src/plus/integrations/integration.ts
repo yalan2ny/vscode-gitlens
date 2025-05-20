@@ -282,7 +282,14 @@ export abstract class IntegrationBase<
 
 	@log()
 	async syncCloudConnection(state: 'connected' | 'disconnected', forceSync: boolean): Promise<void> {
-		if (this._session?.cloud === false) return;
+		if (this._session?.cloud === false) {
+			if (this.id !== HostingIntegrationId.GitHub) {
+				this.container.telemetry.sendEvent('cloudIntegrations/refreshConnection/skippedNonCloud', {
+					'integration.id': this.id,
+				});
+			}
+			return;
+		}
 
 		switch (state) {
 			case 'connected':

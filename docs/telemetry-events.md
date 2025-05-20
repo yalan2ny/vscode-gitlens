@@ -531,6 +531,16 @@ or
 }
 ```
 
+### cloudIntegrations/refreshConnection/skippedNonCloud
+
+> Sent when connection refresh is skipped due to being a non-cloud session
+
+```typescript
+{
+  'integration.id': string
+}
+```
+
 ### cloudIntegrations/settingsOpened
 
 > Sent when a user chooses to manage the cloud integrations
