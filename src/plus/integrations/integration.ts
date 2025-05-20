@@ -336,6 +336,10 @@ export abstract class IntegrationBase<
 			} catch (ex) {
 				Logger.error(ex, scope);
 			}
+		} else if (this._session?.expiresAt == null && this.id !== HostingIntegrationId.GitHub) {
+			this.container.telemetry.sendEvent('cloudIntegrations/refreshConnection/missingExpiry', {
+				'integration.id': this.id,
+			});
 		}
 	}
 

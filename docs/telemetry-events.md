@@ -521,6 +521,16 @@ or
 }
 ```
 
+### cloudIntegrations/refreshConnection/missingExpiry
+
+> Sent when a connection session has a missing expiry date
+
+```typescript
+{
+  'integration.id': string
+}
+```
+
 ### cloudIntegrations/settingsOpened
 
 > Sent when a user chooses to manage the cloud integrations

@@ -84,6 +84,9 @@ export interface TelemetryEvents extends WebviewShowAbortedEvents, WebviewShownE
 	/** Sent when refreshing a provider token from the api fails */
 	'cloudIntegrations/refreshConnection/failed': CloudIntegrationsRefreshConnectionFailedEvent;
 
+	/** Sent when a connection session has a missing expiry date */
+	'cloudIntegrations/refreshConnection/missingExpiry': CloudIntegrationsRefreshConnectionMissingExpiryEvent;
+
 	/** Sent when a cloud-based hosting provider is connected */
 	'cloudIntegrations/hosting/connected': CloudIntegrationsHostingConnectedEvent;
 	/** Sent when a cloud-based hosting provider is disconnected */
@@ -405,6 +408,10 @@ interface CloudIntegrationsGetConnectionFailedEvent {
 interface CloudIntegrationsRefreshConnectionFailedEvent {
 	code: number | undefined;
 	'integration.id': string | undefined;
+}
+
+interface CloudIntegrationsRefreshConnectionMissingExpiryEvent {
+	'integration.id': string;
 }
 
 interface CloudIntegrationsHostingConnectedEvent {
