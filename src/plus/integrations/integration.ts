@@ -280,13 +280,15 @@ export abstract class IntegrationBase<
 		await this.container.storage.deleteWorkspace(this.connectedKey);
 	}
 
+	private skippedNonCloudReported = false;
 	@log()
 	async syncCloudConnection(state: 'connected' | 'disconnected', forceSync: boolean): Promise<void> {
 		if (this._session?.cloud === false) {
-			if (this.id !== HostingIntegrationId.GitHub) {
+			if (this.id !== HostingIntegrationId.GitHub && !this.skippedNonCloudReported) {
 				this.container.telemetry.sendEvent('cloudIntegrations/refreshConnection/skippedNonCloud', {
 					'integration.id': this.id,
 				});
+				this.skippedNonCloudReported = true;
 			}
 			return;
 		}
@@ -334,6 +336,7 @@ export abstract class IntegrationBase<
 		return defaultValue;
 	}
 
+	private missingExpirityReported = false;
 	@gate()
 	protected async refreshSessionIfExpired(scope?: LogScope): Promise<void> {
 		if (this._session?.expiresAt != null && this._session.expiresAt < new Date()) {
@@ -343,10 +346,15 @@ export abstract class IntegrationBase<
 			} catch (ex) {
 				Logger.error(ex, scope);
 			}
-		} else if (this._session?.expiresAt == null && this.id !== HostingIntegrationId.GitHub) {
+		} else if (
+			this._session?.expiresAt == null &&
+			this.id !== HostingIntegrationId.GitHub &&
+			!this.missingExpirityReported
+		) {
 			this.container.telemetry.sendEvent('cloudIntegrations/refreshConnection/missingExpiry', {
 				'integration.id': this.id,
 			});
+			this.missingExpirityReported = true;
 		}
 	}
 
